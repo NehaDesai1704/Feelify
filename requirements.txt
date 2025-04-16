@@ -79,7 +79,7 @@ tenacity==9.0.0
 tensorboard==2.19.0
 tensorboard-data-server==0.7.2
 tensorflow==2.19.0
-tensorflow-io-gcs-filesystem==0.30.0
+tensorflow-io-gcs-filesystem==0.31.0
 termcolor==2.5.0
 toml==0.10.2
 tornado==6.4.2
