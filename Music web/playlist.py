@@ -144,7 +144,7 @@ div[data-testid="stForm"] {
 # ------------------ Header ------------------
 col1, col2 = st.columns([1, 5])
 with col1:
-    st.image("Feelify .png", width=80)
+    st.image("http://github.com/NehaDesai1704/Feelify/blob/main/Music%20web/Feelify%20.png", width=80)
 with col2:
     st.title("🎵 Feelify")
     st.caption("An emotion-based music experience")
