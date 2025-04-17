@@ -7,7 +7,7 @@ from mutagen.mp4 import MP4
 
 st.set_page_config(
     page_title="Feelify - Playlist",
-    page_icon="http://github.com/NehaDesai1704/Feelify/blob/main/Music%20web/Feelify%20.png",
+    page_icon="Feelify .png",
     layout="wide"
 )
 
@@ -44,39 +44,25 @@ emotion = st.query_params.get("emotion", ["happy"])[0]
 if emotion not in emotion_options:
     emotion = "happy"
 
-# --- CSS Styling ---
+# Fix the CSS styling section - remove duplicate styles and fix clamp syntax
 st.markdown("""
 <style>
 [data-testid="stAppViewContainer"] {
     background: linear-gradient(120deg, #b3c8cf, #f1f0e8);
     font-family: 'Poppins', sans-serif;
+    max-width: 100vw;
+    overflow-x: hidden;
 }
-.sidebar-title {
-    font-size: 26px;
-    font-weight: bold;
-    color: #89a8b2;
-}
-.song-button {
-    background: #f1f0e8;
-    border: 2px solid #b3c8cf;
-    color: #000;
-    font-size: 20px;
-    padding: 14px;
-    border-radius: 12px;
-    transition: all 0.4s ease;
-}
-.song-button:hover {
-    background: #b3c8cf;
-    color: #fff;
-    transform: scale(1.05);
-}
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
 .control-button {
     background-color: #111827;
     border: none;
-    border-radius: 50%;  /* Changed to 50% for circular shape */
-    width: 45px;         /* Added fixed width */
-    height: 45px;        /* Added fixed height */
-    padding: 10px;
+    border-radius: 50%;
+    width: calc(35px + 10 * ((100vw - 300px) / (1600 - 300)));
+    height: calc(35px + 10 * ((100vw - 300px) / (1600 - 300)));
+    padding: calc(8px + 2 * ((100vw - 300px) / (1600 - 300)));
     transition: all 0.3s ease-in-out;
     display: flex;
     justify-content: center;
@@ -85,58 +71,66 @@ st.markdown("""
 
 .control-button:hover {
     box-shadow: 0 0 12px #3b82f6;
-    transform: scale(1.2);  /* Increased zoom effect */
+    transform: scale(1.2);
     cursor: pointer;
 }
 
-.now-playing {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    padding: 15px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-}
 div[data-testid="stForm"] button {
     background-color: rgba(179, 200, 207, 0.2);
     color: #333;
-    padding: 2px 7px;
-    margin: -7px 0;
-    border-radius: 0;
-    font-size: 0.9rem;
-    position: relative;
+    padding: calc(2px + 5 * ((100vw - 300px) / (1600 - 300)));
+    font-size: calc(0.8rem + 0.1 * ((100vw - 300px) / (1600 - 300)));
+    width: 100%;
+    text-align: left;
     transition: all 0.3s ease;
-    border: none !important;  /* Force remove border */
-    outline: none !important; /* Remove outline */
-    box-shadow: none !important; /* Remove any shadow */
-}
-
-div[data-testid="stForm"] {
-    margin: -3px 0;
-    padding: 0;
-    border: none !important;
-    outline: none !important;
-}
-
-/* Remove any default Streamlit form styles */
-div.stForm > div {
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
 }
-div[data-testid="stForm"] button::after {
-    right: 8px;
-    font-size: 0.85em;
-    line-height: 1;      /* Matched line height */
-}
-div[data-testid="stForm"] button:hover {
-    background: rgba(179, 200, 207, 0.5);
-    transform: translateX(5px);
+/* Responsive audio player */
+div[style*="background-color: #e5e1de"] {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
 }
 
-div[data-testid="stForm"] {
-    margin: 0;          /* Remove form margin */
-    padding: 0;         /* Remove form padding */
+audio {
+    width: 100% !important;
+    max-width: 100% !important;
 }
+
+/* Responsive controls */
+.control-button {
+    width: clamp(35px, 5vw, 45px);
+    height: clamp(35px, 5vw, 45px);
+    padding: clamp(8px, 1.5vw, 10px);
+}
+
+/* Responsive playlist items */
+div[data-testid="stForm"] button {
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
+    padding: clamp(2px, 1vw, 7px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Responsive sidebar */
+@media screen and (max-width: 768px) {
+    section[data-testid="stSidebar"] {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+    
+    .sidebar-title {
+        font-size: clamp(20px, 4vw, 26px);
+    }
+}
+
+/* Responsive columns */
+[data-testid="column"] {
+    width: 100% !important;
+    flex: 1;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -144,9 +138,9 @@ div[data-testid="stForm"] {
 # ------------------ Header ------------------
 col1, col2 = st.columns([1, 5])
 with col1:
-    st.image("http://github.com/NehaDesai1704/Feelify/blob/main/Music%20web/Feelify%20.png", width=80)
+    st.image("Feelify .png", width=80)
 with col2:
-    st.title("🎵 Feelify")
+    st.title("🎵 Feelify - Playlist")
     st.caption("An emotion-based music experience")
 
 # Define Playlists
@@ -291,32 +285,32 @@ import io
 def autoplay_audio(file_path, song_name):
     try:
         if file_path.startswith('http'):
-            # For URLs, download the content first
             response = requests.get(file_path)
             response.raise_for_status()
             audio_data = response.content
-            # Skip duration check for now
-            duration = "--:--"
-
+            
+            # Handle m4a files properly
+            content_type = "audio/x-m4a" if file_path.endswith('.m4a') else "audio/mp3"
+            
+            b64 = base64.b64encode(audio_data).decode()
+            
+            html = f"""
+            <div style="background-color: #e5e1de; padding:clamp(10px, 2vw, 15px); border-radius:20px; box-shadow: 0 8px 25px #89a8b2;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <b style="font-size: clamp(14px, 2.5vw, 16px);">🎶 Now Playing: {song_name}</b>
+                </div>
+                <audio controls autoplay style="width:100%; margin-top:10px">
+                    <source src="data:{content_type};base64,{b64}" type="{content_type}">
+                </audio>
+            </div>
+            """
+            components.html(html, height=130)
+            
         else:
-            # For local files
-            with open(file_path, "rb") as f:
-                audio_data = f.read()
-                duration = "--:--"
-
-        b64 = base64.b64encode(audio_data).decode()
-        
-        html = f"""
-        <div style="background-color: #e5e1de; padding:15px; border-radius:20px; box-shadow: 0 8px 25px #89a8b2;">
-            <b>🎶 Now Playing: {song_name}</b> <span style="color: #666;">({duration})</span>
-            <audio controls autoplay style="width:100%;margin-top:10px">
-                <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
-            </audio>
-        </div>
-        """
-        components.html(html, height=130)
+            st.error("Local file playback not supported")
+            
     except Exception as e:
-        st.error(f"Error playing {song_name}: {str(e)}")
+        st.error(f"Error playing {song_name}")
         html = f"""
         <div style="background-color: #ffe6e6; padding:15px; border-radius:20px;">
             <b>⚠️ Error Playing: {song_name}</b>
@@ -371,48 +365,85 @@ with col5:
 st.markdown("</div>", unsafe_allow_html=True)
 
 # --- Playlist Display ---
+st.markdown("<div class='playlist-container'>", unsafe_allow_html=True)
 for i, song in enumerate(songs):
     is_active = i == st.session_state.selected_song
     with st.form(f"song_{i}"):
-        if st.form_submit_button(f"🎶 {song['name']}", use_container_width=True):
+        if st.form_submit_button(
+            f"{'🎵' if is_active else '🎶'} {song['name']}", 
+            use_container_width=True
+        ):
             st.session_state.selected_song = i
             st.rerun()
-        st.markdown("""
-            <style>
-            div[data-testid="stForm"] button {
-                text-align: center;
-            }
-            </style>
-        """, unsafe_allow_html=True)
+# Fix the CSS styling section - remove duplicate styles and fix clamp syntax
+st.markdown("""
+<style>
+[data-testid="stAppViewContainer"] {
+    background: linear-gradient(120deg, #b3c8cf, #f1f0e8);
+    font-family: 'Poppins', sans-serif;
+    max-width: 100vw;
+    overflow-x: hidden;
+}
 
-        # Update the sidebar styling
-        st.markdown("""
-        <style>
-        section[data-testid="stSidebar"] {
-            background-color: #e5e1de;
-            border-radius: 20px;
-            box-shadow: 0 8px 25px #89a8b2;
-            padding: 20px;
-        }
-        
-        /* Style for the selectbox in sidebar */
-        section[data-testid="stSidebar"] .stSelectbox {
-            background-color: rgba(137, 168, 178, 0.3);
-            border-radius: 10px;
-            padding: 5px;
-            margin: 10px 0;
-        }
-        
-        section[data-testid="stSidebar"] .stSelectbox > div {
-            background-color: white !important;
-            border-radius: 8px !important;
-            border: 2px solid #89a8b2 !important;
-            padding: 5px !important;
-        }
-        
-        section[data-testid="stSidebar"] .stSelectbox:hover > div {
-            border-color: #6a8994 !important;
-            box-shadow: 0 0 10px rgba(137, 168, 178, 0.3) !important;
-        }
-        </style>
-        """, unsafe_allow_html=True)
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+.control-button {
+    background-color: #111827;
+    border: none;
+    border-radius: 50%;
+    width: min(45px, 5vw);
+    height: min(45px, 5vw);
+    padding: min(10px, 1.5vw);
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.control-button:hover {
+    box-shadow: 0 0 12px #3b82f6;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.sidebar-title {
+    font-size: min(26px, 4vw);
+    font-weight: bold;
+    color: #89a8b2;
+}
+
+div[data-testid="stForm"] button {
+    background-color: rgba(179, 200, 207, 0.2);
+    color: #333;
+    padding: min(7px, 1vw);
+    margin: -7px 0;
+    border-radius: 0;
+    font-size: min(0.9rem, 2vw);
+    position: relative;
+    transition: all 0.3s ease;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+div[data-testid="stForm"] button:hover {
+    background: rgba(179, 200, 207, 0.5);
+    transform: translateX(5px);
+}
+
+@media screen and (max-width: 768px) {
+    section[data-testid="stSidebar"] {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+    
+    [data-testid="column"] {
+        width: 100% !important;
+        flex: 1;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
