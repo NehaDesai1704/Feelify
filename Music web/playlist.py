@@ -7,7 +7,7 @@ from mutagen.mp4 import MP4
 
 st.set_page_config(
     page_title="Feelify - Playlist",
-    page_icon="Feelify .png",
+    page_icon="http://github.com/NehaDesai1704/Feelify/blob/main/Music%20web/Feelify%20.png",
     layout="wide"
 )
 
