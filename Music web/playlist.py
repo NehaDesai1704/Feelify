@@ -7,7 +7,7 @@ from mutagen.mp4 import MP4
 
 st.set_page_config(
     page_title="Feelify - Playlist",
-    page_icon="Feelify .png",
+    page_icon="logo.png",
     layout="wide"
 )
 
@@ -138,7 +138,7 @@ div[data-testid="stForm"] button {
 # ------------------ Header ------------------
 col1, col2 = st.columns([1, 5])
 with col1:
-    st.image("Feelify .png", width=80)
+    st.image("logo.png", width=80)
 with col2:
     st.title("🎵 Feelify - Playlist")
     st.caption("An emotion-based music experience")
