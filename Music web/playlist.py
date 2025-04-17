@@ -295,22 +295,28 @@ def autoplay_audio(file_path, song_name):
             response = requests.get(file_path)
             response.raise_for_status()
             audio_data = response.content
-            audio_file = io.BytesIO(audio_data)
+            try:
+                # Try to get duration
+                temp_file = io.BytesIO(audio_data)
+                audio = MP4(temp_file)
+                duration = int(audio.info.length)
+                minutes, seconds = divmod(duration, 60)
+                duration = f"{minutes:02d}:{seconds:02d}"
+            except Exception:
+                # If duration extraction fails, use placeholder
+                duration = "--:--"
             
-            # Create a temporary file to get duration
-            temp_file = io.BytesIO(audio_data)
-            audio = MP4(temp_file)
-            duration = int(audio.info.length)
-            minutes, seconds = divmod(duration, 60)
-            duration = f"{minutes:02d}:{seconds:02d}"
         else:
             # For local files
             with open(file_path, "rb") as f:
                 audio_data = f.read()
-                audio = File(file_path)
-                duration = int(audio.info.length)
-                minutes, seconds = divmod(duration, 60)
-                duration = f"{minutes}:{seconds:02d}"
+                try:
+                    audio = File(file_path)
+                    duration = int(audio.info.length)
+                    minutes, seconds = divmod(duration, 60)
+                    duration = f"{minutes}:{seconds:02d}"
+                except Exception:
+                    duration = "--:--"
 
         b64 = base64.b64encode(audio_data).decode()
         
